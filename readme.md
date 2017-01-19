@@ -14,6 +14,12 @@ To log into the droplets run
 
 `$ ssh root@104.236.98.173 -i ./digital_ocean_rsa`
 
+### inventory files
+Host names are stored in inventory files. Try to use ip addresses instead of Public DNS
+addresses because certain operations choke on the larger hostnames. Something like
+
+`... too long for Unix domain socket`
+
 #### Example commands
 * shell
   * `$ ansible all -m shell -a "ping -c 3 localhost" -u root -i digital_ocean_hosts --private-key=digital_ocean_rsa`
@@ -47,4 +53,12 @@ Sample command:
 `$ ansible-playbook --private-key=digital_ocean_rsa nginx.yml -i digital_ocean_hosts`
 * Installs Nginx on aws ec2
 
-`$ ansible-playbook --private-key=aws/capsule_workstation.pem aws_nginx.yml -i aws_hosts`
+`$ ansible-playbook --private-key=aws/capsule_workstation.pem aws_nginx.yml -i aws/aws_hosts`
+
+#### syntax checking playbooks
+Playbooks yml can be checked like so
+
+`$ ansible-playbook --syntax-check aws_nginx.yml`
+
+### Roles
+Roles are collections of tasks that sets a server in some state. In this sense they are idempotent.
