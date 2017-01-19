@@ -3,20 +3,25 @@
   apt_repository: repo='ppa:nginx/stable' state=present
 
 - name: Install Nginx
+  become: true
   apt: pkg=nginx state=installed update_cache=true
   notify:
    - Start Nginx
 
 - name: Add H5BP Config
-  copy: src=h5bp/ dest=/etc/nginx/ owner=root group=root
+  become: true
+  copy: src=h5bp dest=/etc/nginx owner=root group=root
 
 - name: Disable Default Config
+  become: true
   file: dest=/etc/nginx/sites-enabled/default state=absent
   notify:
    - Reload Nginx
  
 - name: Add SFH Config
-  template: dest=serversforhackers.com.j2 dest=/etc/nginx/sites-available/{{ domain }} owner=root group=root
+  become: true
+  template: src=serversforhackers.com.j2 dest=/etc/nginx/sites-available/{{ domain }} owner=root group=root
 
 - name: Enable SFH Site Config
+  become: true
   file: src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
